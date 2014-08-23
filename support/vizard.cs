@@ -1,46 +1,46 @@
 // datablock StaticShapeData(CubeShapeData)
 // {
-// 	shapeFile = $SS::Path @ "shapes/cube/cube.dts";
+// 	shapeFile = $SS::Path @ "shapes/primitives/cube/cube.dts";
 // };
 
 // datablock StaticShapeData(CubeCollisionShapeData)
 // {
-// 	shapeFile = $SS::Path @ "shapes/cube/cube_collision.dts";
+// 	shapeFile = $SS::Path @ "shapes/primitives/cube/cube_collision.dts";
 // };
 
 datablock StaticShapeData(CubeGlowShapeData)
 {
-	shapeFile = $SS::Path @ "shapes/cube/cube_glow.dts";
+	shapeFile = $SS::Path @ "shapes/primitives/cube/cube_glow.dts";
 };
 
 // datablock StaticShapeData(CubeGlowCollisionShapeData)
 // {
-// 	shapeFile = $SS::Path @ "shapes/cube/cube_glow_collision.dts";
+// 	shapeFile = $SS::Path @ "shapes/primitives/cube/cube_glow_collision.dts";
 // };
 
 // datablock StaticShapeData(ConeShapeData)
 // {
-// 	shapeFile = $SS::Path @ "shapes/cone/cone.dts";
+// 	shapeFile = $SS::Path @ "shapes/primitives/cone/cone.dts";
 // };
 
 datablock StaticShapeData(ConeGlowShapeData)
 {
-	shapeFile = $SS::Path @ "shapes/cone/cone_glow.dts";
+	shapeFile = $SS::Path @ "shapes/primitives/cone/cone_glow.dts";
 };
 
 // datablock StaticShapeData(ConeCollisionShapeData)
 // {
-// 	shapeFile = $SS::Path @ "shapes/cone/cone_collision.dts";
+// 	shapeFile = $SS::Path @ "shapes/primitives/cone/cone_collision.dts";
 // };
 
 datablock StaticShapeData(CylinderGlowShapeData)
 {
-	shapeFile = $SS::Path @ "shapes/cylinder/cylinder_glow.dts";
+	shapeFile = $SS::Path @ "shapes/primitives/cylinder/cylinder_glow.dts";
 };
 
 datablock StaticShapeData(SphereGlowShapeData)
 {
-	shapeFile = $SS::Path @ "shapes/sphere/sphere_glow.dts";
+	shapeFile = $SS::Path @ "shapes/primitives/sphere/sphere_glow.dts";
 };
 
 //...
