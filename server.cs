@@ -1,6 +1,11 @@
 $SS::Path = "Add-Ons/GameMode_Space_Station/";
 
 exec("./support/vizard.cs");
+exec("./support/raycasts.cs");
+
+exec("./scripts/items/storage.cs");
+exec("./scripts/items/tools.cs");
+exec("./scripts/items/paperwork.cs");
 
 exec("./scripts/bricks.cs");
 exec("./scripts/player.cs");
