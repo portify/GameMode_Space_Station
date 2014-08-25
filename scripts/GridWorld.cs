@@ -32,10 +32,13 @@ function GridWorld::set(%this, %x, %y, %z, %data, %angleID, %bypass)
 
 	if (isObject(%data))
 	{
-		if (%data.brickSizeX > %gridSizeX || %data.brickSizeY > %gridSizeY || %data.brickSizeZ > %gridSizeZ)
+		if (!%bypass)
 		{
-			error("ERROR: Brick datablock '" @ %data @ "' has invalid dimensions");
-			return;
+			if (%data.brickSizeX > %gridSizeX || %data.brickSizeY > %gridSizeY || %data.brickSizeZ > %gridSizeZ)
+			{
+				error("ERROR: Brick datablock '" @ %data @ "' has invalid dimensions");
+				return;
+			}
 		}
 
 		%data = %data.getID();
@@ -43,16 +46,13 @@ function GridWorld::set(%this, %x, %y, %z, %data, %angleID, %bypass)
 		if (%angleID $= "")
 			%angleID = 0;
 
-		if (!%bypass)
-			%angleID += %data.orientationFix;
-
 		%angleID %= 4;
 	}
 	else
 	{
 		if (isObject(%brick))
 		{
-			%control = %brick.control;
+			%this.onBlockRemoved(%x, %y, %z, %brick.getDataBlock(), %brick);
 			%brick.delete();
 
 			%this.brick[%x, %y, %z] = "";
@@ -70,16 +70,18 @@ function GridWorld::set(%this, %x, %y, %z, %data, %angleID, %bypass)
 		//%pz -= (%gridSizeZ - %data.brickSizeZ) * 0.2;
 		%pz -= (%gridSizeZ - %data.brickSizeZ) * 0.1;
 
+	if (%data.brickSizeZ > %gridSizeZ)
+		%pz -= (%gridSizeZ - %data.brickSizeZ) * 0.1;
+
 	if (isObject(%brick))
 	{
 		if (%brick.getDataBlock() == %data && %brick.angleID == %angleID)
 			return %brick;
 
-		%control = %brick.control;
+		%this.onBlockRemoved(%x, %y, %z, %brick.getDataBlock(), %brick);
 		%brick.delete();
 
 		%this.brick[%x, %y, %z] = "";
-		%this.onBlockRemoved(%x, %y, %z, %control);
 	}
 
 	switch(%angleID % 4)
@@ -316,6 +318,8 @@ function GridWorld::tickExport(%this, %y, %handle, %empty, %saved)
 			}
 
 			%handle.writeLine(%x SPC %y SPC %z SPC %brick.getDataBlock().getName() SPC %brick.angleID SPC %brick.colorID);
+			%brick.getDataBlock().onExport(%brick, %handle);
+
 			%saved++;
 		}
 	}
@@ -353,10 +357,10 @@ function GridWorld::import(%this, %fileName)
 		return;
 	}
 
-	%this.tickImport(%handle, 0, 0);
+	%this.tickImport(%handle, 0, 0, 0);
 }
 
-function GridWorld::tickImport(%this, %handle, %added, %failed)
+function GridWorld::tickImport(%this, %handle, %lastBrick, %added, %failed)
 {
 	cancel(%this.modifyTick);
 
@@ -375,6 +379,14 @@ function GridWorld::tickImport(%this, %handle, %added, %failed)
 
 		%line = %handle.readLine();
 
+		if (getSubStr(%line, 0, 2) $= "! ")
+		{
+			if (isObject(%lastBrick))
+				%lastBrick.getDataBlock().onImport(%lastBrick, getSubStr(%line, 2, strLen(%line)));
+
+			continue;
+		}
+
 		%x = getWord(%line, 0);
 		%y = getWord(%line, 1);
 		%z = getWord(%line, 2);
@@ -386,11 +398,11 @@ function GridWorld::tickImport(%this, %handle, %added, %failed)
 
 		if (isObject(%data) && %data.getClassName() $= "FxDTSBrickData")
 		{
-			%brick = %this.set(%x, %y, %z, %data, %angleID, 1);
-			%brick.setColor(%colorID);
+			%lastBrick = %this.set(%x, %y, %z, %data, %angleID, 1);
+			%lastBrick.setColor(%colorID);
 
 			if (%x == 0 && %y == 0 && %z == 500)
-				$base = %brick;
+				$base = %lastBrick;
 
 			%added++;
 		}
@@ -402,7 +414,7 @@ function GridWorld::tickImport(%this, %handle, %added, %failed)
 	%text = %text @ "\c6Failed spaces: " @ %failed @ "\n";
 
 	centerPrintAll("\c3Loading station\n\n" @ %text, 1);
-	%this.modifyTick = %this.schedule(16, "tickImport", %handle, %added, %failed);
+	%this.modifyTick = %this.schedule(16, "tickImport", %handle, %lastBrick, %added, %failed);
 }
 
 function GridWorld::createSliceCube(%this, %y, %color, %time)
@@ -429,20 +441,30 @@ function GridWorld::onBlockAdded(%this, %x, %y, %z, %data, %brick)
 	if (%this.maxZ $= "" || %z > %this.maxZ) %this.maxZ = %z;
 
 	cancel(%this.waterSchedule[%x, %y, %z]);
-	%base = %this.getBrick(%x, %y, %z - 1);
 
-	if (isObject(%base) && %base.getTileCoverage() == 0)
+	if (%data.getID() == BrickBaseData.getID())
 	{
-		%base.setTile(Brick4x4fData);
+		%top = %this.getBrick(%x, %y, %z + 1);
 
-		if (isObject(%base.fullTile))
-			%base.fullTile.setColor(48);
+		if (isObject(%top))
+		{
+			%brick.setTile(Brick4x4fData);
+			%brick.hasTempCover = 1;
+		}
+	}
+	else if (%z != 0)
+	{
+		%base = %this.getBrick(%x, %y, %z - 1);
 
-		%base.hasTempCover = 1;
+		if (isObject(%base) && %base.getTileCoverage() == 0)
+		{
+			%base.setTile(Brick4x4fData);
+			%base.hasTempCover = 1;
+		}
 	}
 }
 
-function GridWorld::onBlockRemoved(%this, %x, %y, %z, %control)
+function GridWorld::onBlockRemoved(%this, %x, %y, %z, %data, %block)
 {
 	%base = %this.getBrick(%x, %y, %z - 1);
 
@@ -452,8 +474,19 @@ function GridWorld::onBlockRemoved(%this, %x, %y, %z, %control)
 		%base.hasTempCover = 0;
 	}
 
-	if (isObject(%control))
-		%control.updateGeneratorCore();
+	if (isObject(%block.gravityGenerator))
+		%block.gravityGenerator.setPart(%block.gravityGeneratorPart, "");
+}
 
-	//%water
+function FxDTSBrickData::onExport(%this, %obj, %handle)
+{
+}
+
+function FxDTSBrickData::onImport(%this, %obj, %line)
+{
+}
+
+function FileObject::writeExportData(%this, %line)
+{
+	%this.writeLine("! " @ %line);
 }

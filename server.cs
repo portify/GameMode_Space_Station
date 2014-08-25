@@ -9,6 +9,8 @@ exec("./scripts/items/paperwork.cs");
 
 exec("./scripts/bricks.cs");
 exec("./scripts/player.cs");
+exec("./scripts/footsteps.cs");
+exec("./scripts/zipline.cs");
 
 exec("./scripts/GridWorld.cs");
 exec("./scripts/AirGroup.cs");
@@ -46,15 +48,62 @@ function serverCmdBase(%client)
 // 	return;
 // }
 
+datablock StaticShapeData(FrameThinData)
+{
+	shapeFile = $SS::Path @ "shapes/frame_thin.dts";
+};
+
+function Camera::updateBuildMode(%this)
+{
+	cancel(%this.updateBuildMode);
+
+	if (!isObject(%this.selection))
+	{
+		%this.selection = new StaticShape()
+		{
+			datablock = FrameThinData;
+		};
+	}
+	else
+		cancel(%this.selection.delete);
+
+	%this.selection.delete = %this.selection.schedule(128, "delete");
+	%this.selection.setNodeColor("ALL", "0.6 0.9 1" SPC 0.6 + mSin($Sim::Time * 4) * 0.3);
+
+	%start = %this.getEyePoint();
+
+	%end = vectorAdd(%start, vectorScale(%this.getEyeVector(), 100));
+	%ray = containerRayCast(%start, %end, $TypeMasks::FxBrickAlwaysObjectType);
+
+	if (%ray)
+	{
+		%data = %ray.getDataBlock();
+
+		%scale = %data.brickSizeX / 4 SPC %data.brickSizeY / 4 SPC %data.brickSizeZ / 10;
+		%scale = vectorAdd(%scale, "0.01 0.01 0.01");
+
+		%this.selection.setTransform(%ray.getWorldBoxCenter());
+		%this.selection.setScale(%scale);
+	}
+	else
+	{
+		%this.selection.setTransform("0 0 0");
+		%this.selection.setScale("0 0 0");
+	}
+
+	%this.updateBuildMode = %this.schedule(64, "updateBuildMode");
+}
+
 function SimObject::placeBlockTick(%this)
 {
 	cancel(%this.placeBlockTick);
 
-	if ((%this.getType() & $TypeMasks::PlayerObjectType) && %this.getState() $= "Dead")
-		return;
-
 	%client = %this.getControllingClient();
-	%data = %client.inventory[%client.currInv];
+
+	if (%client.currInv > 1)
+		%data = %client.inventory[%client.currInv];
+	else
+		%data = %client.instantUseData;
 
 	if (!isObject(%data))
 		return;
@@ -62,14 +111,9 @@ function SimObject::placeBlockTick(%this)
 	if (%data.brickSizeX > 4 || %data.brickSizeY > 4 || %data.brickSizeZ > 10)
 		return;
 
-	if (%this.getClassName() $= "Camera")
-		%range = 100;
-	else
-		%range = 25;
-
 	%start = %this.getEyePoint();
 
-	%end = vectorAdd(%start, vectorScale(%this.getEyeVector(), %range));
+	%end = vectorAdd(%start, vectorScale(%this.getEyeVector(), 100));
 	%ray = containerRayCast(%start, %end, $TypeMasks::FxBrickAlwaysObjectType);
 
 	if (%ray.isGridBrick)
@@ -89,10 +133,13 @@ function SimObject::placeBlockTick(%this)
 				%tileX = %dx >= 0;
 				%tileY = %dy >= 0;
 
-				%ray.setTile(%data, %tileX, %tileY);
+				%tile = %ray.setTile(%data, %tileX, %tileY);
 			}
 			else
-				%ray.setTile(%data);
+				%tile = %ray.setTile(%data);
+
+			if (isObject(%tile) && isObject(%client.brickGroup))
+				%client.brickGroup.add(%tile);
 		}
 		else
 		{
@@ -112,12 +159,8 @@ function SimObject::placeBlockTick(%this)
 
 			if (!isObject(GridWorld.getBrick(%x, %y, %z)))
 			{
-				%forward = %this.getForwardVector();
-
-				%yaw = mATan(getWord(%forward, 1), getWord(%forward, 0));
-				%yaw = mFloatLength((%yaw / $pi) * 2, 0) % 4;
-
-				%brick = GridWorld.set(%x, %y, %z, %data, %yaw);
+				%angle = (getAngleIDFromPlayer(%this) + %data.orientationFix) % 4;
+				%brick = GridWorld.set(%x, %y, %z, %data, %angle);
 
 				if (isObject(%brick))
 				{
@@ -159,7 +202,7 @@ package SpaceStationPackage
 	{
 		Parent::onTrigger(%this, %obj, %slot, %state);
 
-		if (!%obj.getControllingClient().isAdmin || isObject(%obj.getOrbitObject()))
+		if (isObject(%obj.getControllingClient().miniGame) || isObject(%obj.getOrbitObject()))
 			return;
 
 		if (%slot == 0)
@@ -213,23 +256,54 @@ package SpaceStationPackage
 
 	function GameConnection::setControlObject(%this, %object)
 	{
+		%old = %this.getControlObject();
 		Parent::setControlObject(%this, %object);
 
-		if (isObject(%object) && %object.getClassName() $= "Camera")
-		//if (isObject(%object))
+		if (isObject(%object) && %object.getClassName() $= "Camera" && !isObject(%this.miniGame))
 		{
-			//%text = "<font:palatino linotype:30>\n\n\n\c6<font:palatino linotype:24>+";
-			%text = "<font:palatino linotype:28><br><br><br>\c6<font:palatino linotype:36>\c6+";
+			%object.updateBuildMode();
 
+			%text = "<font:palatino linotype:28><br><br><br>\c6<font:palatino linotype:36>\c6+";
 			commandToClient(%this, 'CenterPrint', %text, 0);
 		}
 		else
+		{
+			cancel(%old.updateBuildMode);
 			commandToClient(%this, 'ClearCenterPrint');
+		}
 	}
 
 	function serverCmdRotateBrick(%client, %delta)
 	{
 		%control = %client.getControlObject();
+	}
+
+	function serverCmdDropCameraAtPlayer(%client)
+	{
+		if (!%client.isAdmin && !isObject(%client.miniGame))
+		{
+			%client.isAdmin = 1;
+			%given = 1;
+		}
+
+		Parent::serverCmdDropCameraAtPlayer(%client);
+
+		if (%given)
+			%client.isAdmin = 0;
+	}
+
+	function serverCmdDropPlayerAtCamera(%client)
+	{
+		if (!%client.isAdmin && !isObject(%client.miniGame))
+		{
+			%client.isAdmin = 1;
+			%given = 1;
+		}
+
+		Parent::serverCmdDropPlayerAtCamera(%client);
+
+		if (%given)
+			%client.isAdmin = 0;
 	}
 };
 

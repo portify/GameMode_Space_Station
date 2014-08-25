@@ -1,4 +1,5 @@
 Brick2x2FPrintData.printID = 38;
+Brick4x4FData.material = "tile";
 
 datablock FxDTSBrickData(BrickBaseData)
 {
@@ -21,6 +22,50 @@ datablock FxDTSBrickData(BrickStairsData)
 
 	colorID = 49;
 	orientationFix = 2;
+
+	material = "tile";
+};
+
+datablock FxDTSBrickData(BrickStairsInvertedData)
+{
+	brickFile = $SS::Path @ "bricks/stairs_inverted.blb";
+
+	category = "Space";
+	subCategory = "Basic";
+	uiName = "Stairs Inv";
+
+	colorID = 49;
+	orientationFix = 2;
+
+	material = "tile";
+};
+
+datablock FxDTSBrickData(BrickStairsCornerData)
+{
+	brickFile = $SS::Path @ "bricks/stairs_corner.blb";
+
+	category = "Space";
+	subCategory = "Basic";
+	uiName = "Stairs Corner";
+
+	colorID = 49;
+	orientationFix = 2;
+
+	material = "tile";
+};
+
+datablock FxDTSBrickData(BrickStairsCornerInvertedData)
+{
+	brickFile = $SS::Path @ "bricks/stairs_corner_inverted.blb";
+
+	category = "Space";
+	subCategory = "Basic";
+	uiName = "Stairs Corner Inv";
+
+	colorID = 49;
+	orientationFix = 2;
+
+	material = "tile";
 };
 
 datablock FxDTSBrickData(BrickWallGirdersData)
@@ -65,6 +110,7 @@ datablock FxDTSBrickData(BrickGlassData)
 	uiName = "Glass";
 
 	colorID = 53;
+	material = "solidglass";
 };
 
 datablock FxDTSBrickData(BrickWireStraightData)
@@ -119,77 +165,210 @@ datablock FxDTSBrickData(BrickPlainData5)
 	subCategory = "Plain";
 	uiName = "Plain - 100%";
 
-	colorID = 14;
-	height = 2;
-	level = 5;
+	//colorID = 14;
+	colorID = 48;
+	// height = 2;
+	// level = 5;
 
-	containsWater = 1;
-	isWaterBrick = 1;
+	// containsWater = 1;
+	// isWaterBrick = 1;
 };
 
-datablock FxDTSBrickData(BrickPlainData4)
+datablock FxDTSBrickData(BrickPlainRampData)
 {
-	brickFile = $SS::Path @ "bricks/plain_4.blb";
+	brickFile = $SS::Path @ "bricks/plain_ramp.blb";
+	collisionShapeName = $SS::Path @ "bricks/plain_ramp.dts";
 
 	category = "Space";
 	subCategory = "Plain";
-	uiName = "Plain - 80%";
+	uiName = "Plain Ramp";
 
-	colorID = 14;
-	height = 1.6;
-	level = 4;
-
-	containsWater = 1;
-	isWaterBrick = 1;
+	colorID = 48;
 };
 
-datablock FxDTSBrickData(BrickPlainData3)
+datablock FxDTSBrickData(BrickPlainCornerData)
 {
-	brickFile = $SS::Path @ "bricks/plain_3.blb";
+	brickFile = $SS::Path @ "bricks/plain_corner.blb";
+	collisionShapeName = $SS::Path @ "bricks/plain_corner.dts";
 
 	category = "Space";
 	subCategory = "Plain";
-	uiName = "Plain - 60%";
+	uiName = "Plain Corner";
 
-	colorID = 14;
-	height = 1.2;
-	level = 3;
-
-	containsWater = 1;
-	isWaterBrick = 1;
+	colorID = 48;
 };
 
-datablock FxDTSBrickData(BrickPlainData2)
+datablock FxDTSBrickData(BrickTableSingleData)
 {
-	brickFile = $SS::Path @ "bricks/plain_2.blb";
+	brickFile = $SS::Path @ "bricks/table_single.blb";
 
 	category = "Space";
-	subCategory = "Plain";
-	uiName = "Plain - 40%";
+	subCategory = "Props";
+	uiName = "Table Single";
 
-	colorID = 14;
-	height = 0.8;
-	level = 2;
-
-	containsWater = 1;
-	isWaterBrick = 1;
+	colorID = 58;
 };
 
-datablock FxDTSBrickData(BrickPlainData1)
+datablock FxDTSBrickData(BrickTableCornerData)
 {
-	brickFile = $SS::Path @ "bricks/plain_1.blb";
+	brickFile = $SS::Path @ "bricks/table_corner.blb";
 
 	category = "Space";
-	subCategory = "Plain";
-	uiName = "Plain - 20%";
+	subCategory = "Props";
+	uiName = "Table Corner";
 
-	colorID = 14;
-	height = 0.4;
-	level = 1;
-
-	containsWater = 1;
-	isWaterBrick = 1;
+	colorID = 58;
 };
+
+datablock FxDTSBrickData(BrickChairData)
+{
+	brickFile = $SS::Path @ "bricks/chair.blb";
+
+	category = "Space";
+	subCategory = "Props";
+	uiName = "Chair";
+
+	colorID = 58;
+};
+
+datablock FxDTSBrickData(BrickTileFloorData)
+{
+	brickFile = $SS::Path @ "bricks/tile_floor.blb";
+
+	category = "Space";
+	subCategory = "Tiles";
+	uiName = "Floor Tile";
+
+	colorID = 49;
+	material = "tile";
+};
+
+datablock FxDTSBrickData(BrickTileFloor2xData)
+{
+	brickFile = $SS::Path @ "bricks/tile_floor_2x.blb";
+
+	category = "Space";
+	subCategory = "Tiles";
+	uiName = "Floor Tile Part";
+
+	colorID = 49;
+	material = "tile";
+};
+
+datablock FxDTSBrickData(BrickTilePatternEvenData)
+{
+	brickFile = $SS::Path @ "bricks/tile_pattern_even.blb";
+
+	category = "Space";
+	subCategory = "Tiles";
+	uiName = "Even Pattern Tile";
+
+	colorID = 40;
+	material = "concrete";
+};
+
+datablock FxDTSBrickData(BrickTilePatternShuffledData)
+{
+	brickFile = $SS::Path @ "bricks/tile_pattern_shuffled.blb";
+
+	category = "Space";
+	subCategory = "Tiles";
+	uiName = "Shuffled Pattern Tile";
+
+	colorID = 39;
+	material = "wood";
+};
+
+function BrickChairData::onActivate(%this, %obj, %player)
+{
+	switch (%obj.angleID % 4)
+	{
+		case 0:
+			%rotation = "0 0 1 1.5708";
+			%vector = "1 0 0";
+
+		case 1:
+			%rotation = "0 0 1 3.1415";
+			%vector = "0 -1 0";
+		case 2:
+			%rotation = "0 0 -1 1.5708";
+			%vector = "-1 0 0";
+
+		case 3:
+			%rotation = "0 0 1 0";
+			%vector = "0 1 0";
+	}
+
+	%position = vectorAdd(%obj.position, "0 0 0.15");
+	%position = vectorAdd(%position, vectorScale(%vector, 0.3));
+
+	%player.setTransform(%position SPC %rotation);
+	%player.setActionThread("sit", 1);
+}
+
+// datablock FxDTSBrickData(BrickPlainData4)
+// {
+// 	brickFile = $SS::Path @ "bricks/plain_4.blb";
+
+// 	category = "Space";
+// 	subCategory = "Plain";
+// 	uiName = "Plain - 80%";
+
+// 	colorID = 14;
+// 	height = 1.6;
+// 	level = 4;
+
+// 	containsWater = 1;
+// 	isWaterBrick = 1;
+// };
+
+// datablock FxDTSBrickData(BrickPlainData3)
+// {
+// 	brickFile = $SS::Path @ "bricks/plain_3.blb";
+
+// 	category = "Space";
+// 	subCategory = "Plain";
+// 	uiName = "Plain - 60%";
+
+// 	colorID = 14;
+// 	height = 1.2;
+// 	level = 3;
+
+// 	containsWater = 1;
+// 	isWaterBrick = 1;
+// };
+
+// datablock FxDTSBrickData(BrickPlainData2)
+// {
+// 	brickFile = $SS::Path @ "bricks/plain_2.blb";
+
+// 	category = "Space";
+// 	subCategory = "Plain";
+// 	uiName = "Plain - 40%";
+
+// 	colorID = 14;
+// 	height = 0.8;
+// 	level = 2;
+
+// 	containsWater = 1;
+// 	isWaterBrick = 1;
+// };
+
+// datablock FxDTSBrickData(BrickPlainData1)
+// {
+// 	brickFile = $SS::Path @ "bricks/plain_1.blb";
+
+// 	category = "Space";
+// 	subCategory = "Plain";
+// 	uiName = "Plain - 20%";
+
+// 	colorID = 14;
+// 	height = 0.4;
+// 	level = 1;
+
+// 	containsWater = 1;
+// 	isWaterBrick = 1;
+// };
 
 function FxDTSBrick::getTileCoverage(%this)
 {
@@ -253,8 +432,7 @@ function FxDTSBrick::setTile(%this, %data, %x, %y)
 				isGridBrick = 1;
 				isTile = 1;
 
-				//colorID = %data.colorID;
-				colorID = 41;
+				colorID = %data.colorID $= "" ? 41 : %data.colorID;
 				printID = %data.printID;
 
 				gridX = %this.gridX;
@@ -271,6 +449,7 @@ function FxDTSBrick::setTile(%this, %data, %x, %y)
 			%this.fullTile.plant();
 
 			%this.getGroup().add(%this.fullTile);
+			return %this.fullTile;
 		}
 	}
 	else if (%data.brickSizeX == 2)
@@ -298,8 +477,7 @@ function FxDTSBrick::setTile(%this, %data, %x, %y)
 				isGridBrick = 1;
 				isTile = 1;
 
-				//colorID = %data.colorID;
-				colorID = 41;
+				colorID = %data.colorID $= "" ? 41 : %data.colorID;
 				printID = %data.printID;
 
 				gridX = %this.gridX;
@@ -316,6 +494,7 @@ function FxDTSBrick::setTile(%this, %data, %x, %y)
 			%this.tile[%x, %y].plant();
 
 			%this.getGroup().add(%this.tile[%x, %y]);
+			return %this.tile[%x, %y];
 		}
 	}
 }
@@ -352,6 +531,54 @@ function FxDTSBrick::clearTiles(%this, %x, %y)
 	{
 		%this.tile[%x, %y].delete();
 		%this.tile[%x, %y] = "";
+	}
+}
+
+function BrickBaseData::onExport(%this, %obj, %handle)
+{
+	if (%obj.hasTempCover)
+		return;
+
+	if (isObject(%obj.fullTile))
+	{
+		%name = %obj.fullTile.getDataBlock().getName();
+		%handle.writeExportData("FullTile" SPC %name SPC %obj.fullTile.colorID);
+	}
+	else
+	{
+		for (%x = 0; %x < 2; %x++)
+		{
+			for (%y = 0; %y < 2; %y++)
+			{
+				%tile = %obj.tile[%x, %y];
+
+				if (isObject(%tile))
+				{
+					%name = %tile.getDataBlock().getName();
+					%handle.writeExportData("PartTile" SPC %x SPC %y SPC %name SPC %tile.colorID);
+				}
+			}
+		}
+	}
+}
+
+function BrickBaseData::onImport(%this, %obj, %line)
+{
+	%field = firstWord(%line);
+
+	switch$ (%field)
+	{
+		case "FullTile":
+			%brick = %obj.setTile(getWord(%line, 1));
+
+			if (isObject(%brick))
+				%brick.setColor(getWord(%line, 2));
+
+		case "PartTile":
+			%brick = %obj.setTile(getWord(%line, 3), getWord(%line, 1), getWord(%line, 2));
+
+			if (isObject(%brick))
+				%brick.setColor(getWord(%line, 4));
 	}
 }
 
