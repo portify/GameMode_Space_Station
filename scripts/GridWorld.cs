@@ -13,16 +13,16 @@ function GridWorld::onRemove(%this)
 function GridWorld::set(%this, %x, %y, %z, %data, %angleID, %bypass)
 {
 	if (isEventPending(%this.modifyTick) && !%bypass)
-		return;
+		return 0;
 
 	if (%x !$= mFloor(%x) || %y !$= mFloor(%y) || %z !$= mFloor(%z))
 	{
 		error("ERROR: Invalid block coordinates '" @ %x SPC %y SPC %z @ "'");
-		return;
+		return 0;
 	}
 
 	if (%z < 0)
-		return;
+		return 0;
 
 	%gridSizeX = getWord(%this.size, 0);
 	%gridSizeY = getWord(%this.size, 1);
@@ -37,7 +37,7 @@ function GridWorld::set(%this, %x, %y, %z, %data, %angleID, %bypass)
 			if (%data.brickSizeX > %gridSizeX || %data.brickSizeY > %gridSizeY || %data.brickSizeZ > %gridSizeZ)
 			{
 				error("ERROR: Brick datablock '" @ %data @ "' has invalid dimensions");
-				return;
+				return 0;
 			}
 		}
 

@@ -17,6 +17,7 @@ datablock PlayerData(PlayerSpaceArmor : PlayerStandardArmor)
 
 	runForce = 4320;
 	jumpForce = 1728;
+	jumpSound = 0;
 
 	canJet = 0;
 	maxTools = 10;
@@ -199,9 +200,9 @@ function Player::spaceTick(%this)
 	%bottom = %bottom @ "<color:FFFF77>Velocity\c6: " @ mFloatLength(vectorLen(%this.getVelocity()) / $TorqueToFeet, 1) @ " m/s\n";
 	//%bottom = %bottom @ "<just:right><color:" @ (%this.usingJetpack ? "77FF77" : "777777") @ ">Jetpack \n<just:left>";
 	//%bottom = %bottom @ "<color:FFFF77>Gravity\c6: " @ mFloatLength(-10 * %this.spaceZone.gravityMod / 2, 1) @ " m/s\n";
-	//%bottom = %bottom @ "<color:FFFF77>Gravity\c6: " @ mFloatLength(20 * %this.spaceZone.gravityMod / $TorqueToFeet, 1) @ " m/s²";
-	//%bottom = %bottom @ "<color:FFFF77>Acceleration\c6: " @ mFloatLength(vectorLen(%force) / 160 / $TorqueToFeet, 1) @ " m/s²";
-	%bottom = %bottom @ "<color:FFFF77>Acceleration\c6: " @ mFloatLength(vectorLen(%force) / 160 / $TorqueToFeet, 1) @ " m/s²";
+	//%bottom = %bottom @ "<color:FFFF77>Gravity\c6: " @ mFloatLength(20 * %this.spaceZone.gravityMod / $TorqueToFeet, 1) @ " m/sï¿½";
+	//%bottom = %bottom @ "<color:FFFF77>Acceleration\c6: " @ mFloatLength(vectorLen(%force) / 160 / $TorqueToFeet, 1) @ " m/sï¿½";
+	%bottom = %bottom @ "<color:FFFF77>Acceleration\c6: " @ mFloatLength(vectorLen(%force) / 160 / $TorqueToFeet, 1) @ " m/sï¿½";
 	%bottom = %bottom @ "<just:right><color:" @ (%this.inertialDampeners ? "77FF77" : "777777") @ ">Inertial dampeners \n<just:left>";
 	%bottom = %bottom @ "<color:FFFF77>To Station\c6: " @ mFloatLength(vectorDist(%this.position, $base.position) / 2, 1) @ " m\n";
 	%bottom = %bottom @ "<color:FFFF77>Fuel\c6: " @ mFloatLength(%this.fuel, 2) @ " L \n";
@@ -249,7 +250,7 @@ package SpaceStation_Player
 
 			if (!isObject(%obj.spaceZone))
 			{
-				%obj.spaceZone = new PhysicalZone() 
+				%obj.spaceZone = new PhysicalZone()
 				{
 					polyhedron = "0 0 0 1 0 0 0 -1 0 0 0 1";
 				};

@@ -18,6 +18,14 @@ exec("./scripts/water.cs");
 exec("./scripts/singularity.cs");
 exec("./scripts/gravity_generator.cs");
 
+function initWorldSpawn()
+{
+	%base = GridWorld.set(0, 0, 500, BrickBaseData);
+
+	if (isObject(%base))
+		%base.setTile(Brick4x4fData);
+}
+
 if (!isObject(GridWorld))
 {
 	new ScriptObject(GridWorld)
@@ -25,10 +33,7 @@ if (!isObject(GridWorld))
 		size = "4 4 10";
 	};
 
-	$base = GridWorld.set(0, 0, 500, BrickBaseData);
-
-	if (isObject($base))
-		$base.setTile(Brick4x4fData);
+	schedule(0, 0, "initWorldSpawn");
 }
 
 function serverCmdBase(%client)

@@ -387,7 +387,7 @@ function FxDTSBrick::getTileCoverage(%this)
 function FxDTSBrick::setTile(%this, %data, %x, %y)
 {
 	if (%this.getDataBlock() != BrickBaseData.getID())
-		return;
+		return 0;
 
 	%px = getWord(%this.position, 0);
 	%py = getWord(%this.position, 1);
@@ -403,13 +403,13 @@ function FxDTSBrick::setTile(%this, %data, %x, %y)
 		else
 			%this.clearTiles(%x, %y);
 
-		return;
+		return 0;
 	}
 
 	if (%data.brickSizeZ != 1 || %data.brickSizeX != %data.brickSizeY)
 	{
 		error("ERROR: '" @ %data.getName() @ "' has invalid tile dimensions");
-		return;
+		return 0;
 	}
 
 	if (%data.brickSizeX == 4)
@@ -448,9 +448,25 @@ function FxDTSBrick::setTile(%this, %data, %x, %y)
 			%this.fullTile.setTrusted(1);
 			%this.fullTile.plant();
 
+			%group = %this.getGroup();
+			%brick = %this.fullTile;
+
+			if (!isObject(%group))
+			{
+				announce("Set Tile - group does not exist, brick: " @ %brick);
+				return 0;
+			}
+
+			if (DataBlockGroup.isMember(%brick))
+			{
+				announce("Set Tile - brick is datablock " @ %brick SPC %brick.getName() SPC %brick.getClassName());
+				return 0;
+			}
+
 			%this.getGroup().add(%this.fullTile);
-			return %this.fullTile;
 		}
+
+		return %this.fullTile;
 	}
 	else if (%data.brickSizeX == 2)
 	{
@@ -497,6 +513,8 @@ function FxDTSBrick::setTile(%this, %data, %x, %y)
 			return %this.tile[%x, %y];
 		}
 	}
+
+	return 0;
 }
 
 function FxDTSBrick::clearTiles(%this, %x, %y)

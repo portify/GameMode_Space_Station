@@ -186,7 +186,7 @@ package FootstepsPackage
 	function Armor::onNewDataBlock(%this, %obj)
 	{
 		Parent::onNewDataBlock(%this, %obj);
-		
+
 		if (!isEventPending(%obj.updateFootsteps))
 			%obj.updateFootsteps = %obj.schedule(0, "updateFootsteps");
 	}
@@ -207,4 +207,3 @@ package FootstepsPackage
 };
 
 activatePackage("FootstepsPackage");
-JumpSound.fileName = "";
