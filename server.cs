@@ -24,6 +24,8 @@ function initWorldSpawn()
 
 	if (isObject(%base))
 		%base.setTile(Brick4x4fData);
+
+	GridWorld.baseSpawn = %base;
 }
 
 if (!isObject(GridWorld))
@@ -40,9 +42,9 @@ function serverCmdBase(%client)
 {
 	%player = %client.player;
 
-	if (isObject(%player) && isObject($base))
+	if (isObject(%player) && isObject(GridWorld.baseSpawn))
 	{
-		%player.setTransform(vectorAdd($base.getPosition(), "0 0 1.4"));
+		%player.setTransform(vectorAdd(GridWorld.baseSpawn.getPosition(), "0 0 1.4"));
 		%player.setVelocity("0 0 0");
 	}
 }
@@ -197,8 +199,8 @@ package SpaceStationPackage
 {
 	function MiniGameSO::pickSpawnPoint(%this)
 	{
-		if (%this.owner == 0 && isObject($base))
-			return vectorAdd($base.position, "0 0 1.4");
+		if (%this.owner == 0 && isObject(GridWorld.baseSpawn))
+			return vectorAdd(GridWorld.baseSpawn.position, "0 0 1.4");
 
 		return ParenT::pickSpawnPoint(%this);
 	}
@@ -219,7 +221,7 @@ package SpaceStationPackage
 				%end = vectorAdd(%start, vectorScale(%obj.getEyeVector(), 100));
 				%ray = containerRayCast(%start, %end, $TypeMasks::FxBrickAlwaysObjectType);
 
-				if (%ray.isGridBrick && (!isObject($base) || %ray != $base))
+				if (%ray.isGridBrick && (!isObject(GridWorld.baseSpawn) || %ray != GridWorld.baseSpawn))
 				{
 					if (%ray.isTile && isObject(%ray.baseBrick))
 						//%ray.baseBrick.setTile(0, %ray.tileX, %ray.tileY);
