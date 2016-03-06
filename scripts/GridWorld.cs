@@ -401,8 +401,8 @@ function GridWorld::tickImport(%this, %handle, %lastBrick, %added, %failed)
 			%lastBrick = %this.set(%x, %y, %z, %data, %angleID, 1);
 			%lastBrick.setColor(%colorID);
 
-			if (%x == 0 && %y == 0 && %z == 500)
-				$base = %lastBrick;
+			// if (%x == 0 && %y == 0 && %z == 500)
+			// 	$base = %lastBrick;
 
 			%added++;
 		}

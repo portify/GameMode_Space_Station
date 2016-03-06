@@ -1,8 +1,8 @@
-$FuelCapacity = 50;
-$FuelUsage = 300; // Liters per hour
+$FuelCapacity = 2500; // grams of nitrogen
+$PowerCapacity = 2000; // joules
 
 $CorpseTimeoutValue = 15000;
-$TorqueToFeet = 20 / 9.81;
+$TorqueToMeters = 20 / 9.81;
 
 datablock PlayerData(PlayerSpaceArmor : PlayerStandardArmor)
 {
@@ -16,7 +16,7 @@ datablock PlayerData(PlayerSpaceArmor : PlayerStandardArmor)
 	minImpactSpeed = 30;
 
 	runForce = 4320;
-	jumpForce = 1728;
+	jumpForce = 1500;
 	jumpSound = 0;
 
 	canJet = 0;
@@ -70,8 +70,8 @@ function PlayerSpaceRunningArmor::onTrigger(%this, %obj, %slot, %state)
 {
 	Parent::onTrigger(%this, %obj, %slot, %state);
 
-	if (%slot == 0 && %state)
-		%obj.triggerZipline();
+	// if (%slot == 0 && %state)
+	// 	%obj.triggerZipline();
 
 	if (%obj.spaceZone.gravityMod > 0)
 	{
@@ -109,8 +109,8 @@ function Player::spaceTick(%this)
 	if (!%this.getDataBlock().isSpacePlayer)
 		return;
 
-	if (%this.fuel $= "")
-		%this.fuel = $FuelCapacity;
+	// if (%this.fuel $= "")
+	// 	%this.fuel = $FuelCapacity;
 
 	// if (!isObject(%this.cube))
 	// 	%this.cube = createShape(CubeGlowShapeData, "0 0.5 0 0.5");
@@ -135,13 +135,18 @@ function Player::spaceTick(%this)
 	// %this.cube.setScale(%sx SPC %sy SPC %sz);
 	%position = vectorSub(%position, %sx / 2 SPC %sy / -2 SPC %sz / 2);
 
-	%this.spaceZone.setScale(%sx SPC %sy SPC %sz);
-	%this.spaceZone.setTransform(%position);
+	if (%this.spaceZone.getScale() !$= %sx SPC %sy SPC %sz)
+		%this.spaceZone.setScale(%sx SPC %sy SPC %sz);
+
+	if (%this.spaceZone.getPosition() !$= %position)
+		%this.spaceZone.setTransform(%position);
 
 	%ray = containerRayCast(%this.getPosition(), vectorAdd(%this.getPosition(), "0 0 30"), $TypeMasks::FxBrickObjectType);
 	%position = %this.getPosition();
 
-	// %this.spaceZone.gravityMod = %ray != 0;
+	%this.fuelUsage = 0;
+	%this.powerUsage = 0;
+
 	%this.spaceZone.gravityMod = 0;
 	%this.spaceZone.setAppliedForce("0 0 0");
 
@@ -154,27 +159,6 @@ function Player::spaceTick(%this)
 			%this.spaceZone.gravityMod += %shape.gravityGenerator.getGravityMod(%position);
 			%this.addAppliedForce(%shape.gravityGenerator.getAppliedForce(%position));
 		}
-	}
-
-	%usage = $FuelUsage * (32 / 1000) / 60 / 60;
-
-	if (%this.usingJetpack && %this.fuel >= %usage)
-	{
-		%this.fuel -= %usage;
-
-		//%force = %this.getDataBlock().mass * -20;
-		%force = %this.getDataBlock().mass * 20;
-		%velocity = vectorScale(%this.getEyeVector(), %force);
-
-		%this.addAppliedForce(%velocity);
-	}
-
-	if (%this.inertialDampeners)
-	{
-		if (vectorLen(%this.getVelocity()) >= 0.25)
-			%this.addAppliedForce(vectorScale(%this.getVelocity(), -%this.getDataBlock().mass));
-		else
-			%this.setVelocity("0 0 0");
 	}
 
 	initContainerRadiusSearch(%this.getHackPosition(), 32, $TypeMasks::StaticShapeObjectType);
@@ -192,20 +176,51 @@ function Player::spaceTick(%this)
 		}
 	}
 
+	if (%this.jetpackSpecial)
+		%this.updateJetpack(32 / 1000);
+	else
+	{
+		%usage = $JetpackEfficiency * (32 / 1000) / 60 / 60;
+
+		//if (%this.usingJetpack && %this.fuel >= %usage)
+		if (%this.usingJetpack && %this.useFuel(%usage))
+		{
+			//%this.fuel -= %usage;
+
+			%velocity = vectorScale(%this.getEyeVector(), $JetpackThrust);
+			%this.addAppliedForce(%velocity);
+		}
+
+		if (%this.inertialDampeners)
+		{
+			if (vectorLen(%this.getVelocity()) >= 0.25)
+				%this.addAppliedForce(vectorScale(%this.getVelocity(), -%this.getDataBlock().mass));
+			else
+				%this.setVelocity("0 0 0");
+		}
+	}
+
+	if (isObject(%this.light))
+		%this.flashlightTick();
+
 	%force = %this.spaceZone.appliedForce;
 	%force = vectorAdd(%force, "0 0" SPC %this.spaceZone.gravityMod * -20 * 160);
+	%accel = vectorLen(%force) / 160 / $TorqueToMeters;
 
 	%bottom = "<font:palatino linotype:20>";
 	//%bottom = %bottom @ "<color:FFFF77>Velocity\c6: " @ vectorLen(%this.getVelocity()) / 2 @ " m/s\n";
-	%bottom = %bottom @ "<color:FFFF77>Velocity\c6: " @ mFloatLength(vectorLen(%this.getVelocity()) / $TorqueToFeet, 1) @ " m/s\n";
+	%bottom = %bottom @ "<color:FFFF77>Velocity\c6: " @ mFloatLength(vectorLen(%this.getVelocity()) / $TorqueToMeters, 1) @ " m/s (" @ mFloatLength(%accel, 1) @ " m/s�)\n";
 	//%bottom = %bottom @ "<just:right><color:" @ (%this.usingJetpack ? "77FF77" : "777777") @ ">Jetpack \n<just:left>";
 	//%bottom = %bottom @ "<color:FFFF77>Gravity\c6: " @ mFloatLength(-10 * %this.spaceZone.gravityMod / 2, 1) @ " m/s\n";
-	//%bottom = %bottom @ "<color:FFFF77>Gravity\c6: " @ mFloatLength(20 * %this.spaceZone.gravityMod / $TorqueToFeet, 1) @ " m/s�";
-	//%bottom = %bottom @ "<color:FFFF77>Acceleration\c6: " @ mFloatLength(vectorLen(%force) / 160 / $TorqueToFeet, 1) @ " m/s�";
-	%bottom = %bottom @ "<color:FFFF77>Acceleration\c6: " @ mFloatLength(vectorLen(%force) / 160 / $TorqueToFeet, 1) @ " m/s�";
-	%bottom = %bottom @ "<just:right><color:" @ (%this.inertialDampeners ? "77FF77" : "777777") @ ">Inertial dampeners \n<just:left>";
-	%bottom = %bottom @ "<color:FFFF77>To Station\c6: " @ mFloatLength(vectorDist(%this.position, $base.position) / 2, 1) @ " m\n";
-	%bottom = %bottom @ "<color:FFFF77>Fuel\c6: " @ mFloatLength(%this.fuel, 2) @ " L \n";
+	//%bottom = %bottom @ "<color:FFFF77>Gravity\c6: " @ mFloatLength(20 * %this.spaceZone.gravityMod / $TorqueToMeters, 1) @ " m/s�";
+	//%bottom = %bottom @ "<color:FFFF77>Acceleration\c6: " @ mFloatLength(vectorLen(%force) / 160 / $TorqueToMeters, 1) @ " m/s�";
+	//%bottom = %bottom @ "<color:FFFF77>Acceleration\c6: " @ mFloatLength(vectorLen(%force) / 160 / $TorqueToMeters, 1) @ " m/s�";
+	//%bottom = %bottom @ "<color:FFFF77>Acceleration\c6: " @ mFloatLength(, 1) @ " m/s�\n";
+	//%bottom = %bottom @ "<just:right><color:" @ (%this.inertialDampeners ? "77FF77" : "777777") @ ">Inertial dampeners \n<just:left>";
+	//%bottom = %bottom @ "<color:FFFF77>To Station\c6: " @ mFloatLength(vectorDist(%this.position, $base.position) / 2, 1) @ " meters\n";
+	%bottom = %bottom @ "<color:FFFF77>Fuel\c6: " @ mFloatLength(%this.fuel / 1000, 2) @ " kg (" @ mFloatLength(%this.fuelUsage, 1) @ " g/s)\n";
+	%bottom = %bottom @ "<color:FFFF77>Power\c6: " @ mFloatLength(%this.power / 1000, 2) @ " kj (" @ %this.powerUsage @ " W)\n";
+	%bottom = %bottom @ "<color:FFFF77>Oxygen\c6: 0 kPa\n";
 
 	if (%this.getState() !$= "Dead" && isObject(%this.client) && $Sim::Time - %this.lastSpaceUpdate > 0.05)
 	{
@@ -216,6 +231,32 @@ function Player::spaceTick(%this)
 	}
 
 	%this.spaceTick = %this.schedule(32, "spaceTick");
+}
+
+function Player::useFuel(%this, %fuel)
+{
+	if (%this.fuel >= %fuel)
+	{
+		%this.fuelUsage += %fuel / (32 / 1000);
+		%this.fuel -= %fuel;
+
+		return 1;
+	}
+
+	return 0;
+}
+
+function Player::usePower(%this, %power)
+{
+	if (%this.power >= %power)
+	{
+		%this.powerUsage += %power / (32 / 1000);
+		%this.power -= %power;
+
+		return 1;
+	}
+
+	return 0;
 }
 
 function Player::addAppliedForce(%this, %force)
@@ -236,6 +277,9 @@ package SpaceStation_Player
 			%center = %center @ "<color:77FF77>Plant Brick \c6- Toggle inertial dampeners\n";
 
 			%this.centerPrint(%center, 10);
+
+			%this.player.fuel = $FuelCapacity;
+			%this.player.power = $PowerCapacity;
 		}
 	}
 
@@ -284,7 +328,7 @@ package SpaceStation_Player
 		if (!%this.isSpacePlayer)
 			return Parent::onImpact(%this, %obj, %col, %pos, %speed);
 
-		%speed /= $TorqueToFeet;
+		%speed /= $TorqueToMeters;
 		%speed -= 10;
 		%speed *= 2;
 

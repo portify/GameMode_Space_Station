@@ -1,0 +1,402 @@
+//-------------------------- 8/26/2014 -- 13:25:44 -----
+Processor Init:
+   Intel Pentium III, ~3.45 Ghz
+     (timed at roughly 3.44 Ghz)
+   FPU detected
+   MMX detected
+   SSE detected
+ 
+Math Init:
+   Installing Standard C extensions
+   Installing Assembly extensions
+   Installing FPU extensions
+   Installing MMX extensions
+   Installing SSE extensions
+ 
+Input Init:
+   DirectInput enabled.
+
+Blockland v21 build 1931
+Module Directory: D:/GAMESERVER/Blockland/Blockland28200
+Profile Path: D:/GAMESERVER/Blockland/Blockland28200
+Total Ram: 16271 MB
+OS: Windows Server 2008 R2 Standard Edition Service Pack 1 (build 7601), 64-bit
+
+--------- Parsing Arguments ---------
+argc = 9
+argv[2] = -profilePath
+argv[3] = "D:\GAMESERVER\Blockland\Blockland28200\"
+argv[4] = -dedicated
+argv[5] = -port
+argv[6] = 28200
+argv[7] = -gamemode
+argv[8] = Space_Station
+Parsing command line arguments: -profilePath "D:\GAMESERVER\Blockland\Blockland28200\" -dedicated -port 28200 -gamemode Space_Station
+--------- Loading Common ---------
+Loading compiled script base/main.cs.
+Loading compiled script base/client/defaults.cs.
+Loading compiled script base/server/defaults.cs.
+Executing config/client/prefs.cs.
+Executing config/server/prefs.cs.
+Executing config/server/ADD_ON_LIST.cs.
+Executing config/server/musicList.cs.
+--------- Loading MODS ---------
+
+
+--------- Initializing Base ---------
+Loading compiled script base/client/init.cs.
+Loading compiled script base/server/init.cs.
+Loading compiled script base/client/canvas.cs.
+Loading compiled script base/client/audio.cs.
+
+--------- Initializing Base: Server ---------------------
+Initializing steamAPI...
+  SteamAPI initialization failed.
+Loading compiled script base/server/mainServer.cs.
+Loading compiled script base/server/scripts/game.cs.
+Initializing steamAPI...
+  SteamAPI is already on
+Steam (server,1) initialized
+Steam (server,1) unlock failed, will use Blockland authentication
+
+--------- Starting Dedicated Server ---------
+Destroying NET Server
+Exporting server prefs...
+
+Starting Internet Server
+Binding server port to default IP
+UDP initialized on port 28200
+
+Initializing UPnP...
+--------------------
+UPnP Discovery Failed
+--------------------
+
+Loading compiled script base/server/scripts/DamageTypes.cs.
+Loading compiled script base/server/scripts/allGameScripts.cs.
+... Shape with old version.
+Activating package: snowBallPackage
+Copying prefs to server variables
+Using game mode file 'Add-Ons/GameMode_Space_Station/gamemode.txt'
+Setting default server variables
+
+---------  Loading Add-Ons (Game Mode) ---------
+Loading Add-On: Light_Basic (CRC:2050298561)
+Executing Add-Ons/Light_Basic/server.cs.
+Executing Add-Ons/Light_Basic/light_basic.cs.
+8 datablocks added.
+
+Loading Add-On: GameMode_Space_Station
+Executing Add-Ons/GameMode_Space_Station/server.cs.
+Executing Add-Ons/GameMode_Space_Station/support/vizard.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/bricks.cs.
+Activating package: ActivateData
+Executing Add-Ons/GameMode_Space_Station/scripts/player.cs.
+Activating package: SpaceStation_Player
+Activating package: FlashlightPackage
+Executing Add-Ons/GameMode_Space_Station/scripts/zipline.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/jetpack.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/chat.cs.
+Activating package: SpaceStation_Chat
+Executing Add-Ons/GameMode_Space_Station/scripts/GridWorld.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/AirGroup.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/water.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/singularity.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/gravity_generator.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/asteroids.cs.
+
+Add-Ons/GameMode_Space_Station/scripts/GridWorld.cs (116): Unable to find object: 'BrickGroup_888888' attempting to call function 'add'
+BackTrace: ->[SpaceStation_Chat]onStart->[SpaceStation_Chat]serverPart2->[SpaceStation_Chat]dedicatedKeyCheck->[SpaceStation_Chat]initDedicated->[SpaceStation_Chat]createServer->[SpaceStation_Chat]onServerCreated->[SpaceStation_Chat]loadGameModeAddOns->GridWorld::set
+
+
+Add-Ons/GameMode_Space_Station/scripts/bricks.cs (451): Unable to find object: '-1' attempting to call function 'add'
+BackTrace: ->[SpaceStation_Chat]onStart->[SpaceStation_Chat]serverPart2->[SpaceStation_Chat]dedicatedKeyCheck->[SpaceStation_Chat]initDedicated->[SpaceStation_Chat]createServer->[SpaceStation_Chat]onServerCreated->[SpaceStation_Chat]loadGameModeAddOns->fxDTSBrick::setTile
+
+Activating package: SpaceStationPackage
+39 datablocks added.
+
+
+
+
+Datablock Report: 
+  Base:    424
+  Paint:   441
+  Add-Ons: 47
+  Music:   0
+  Total:   912
+
+Starting server authentication...
+
+*** CREATING MISSION
+*** Stage 1 create
+152 environmental resource files found
+Regenerating file manifest
+Got 831 items in manifest, 0 files hashed
+
+ERROR: WebCom_PostServer() - mission is not running
+BackTrace: ->[SpaceStationPackage]onStart->[SpaceStationPackage]serverPart2->[SpaceStationPackage]dedicatedKeyCheck->[SpaceStationPackage]initDedicated->[SpaceStationPackage]createServer->createMission->onMissionLoaded->WebCom_PostServer
+
+Direct load Add-Ons/GameMode_Space_Station/save.bls, 3, , 2, 
+LOADING BRICKS: Add-Ons/GameMode_Space_Station/save.bls (ColorMethod 3)
+Engine initialized...
+Got Connect challenge Request from 87.58.244.214:45088
+Authentication: Connected...
+Dedicated server is now running.
+Authentication: Sending Response...
+Authentication: Connected...
+Authentication: SUCCESS
+Posting to master server
+Got Connect challenge Request from 87.58.244.214:45088
+Got connect request from 87.58.244.214:45088
+  net name = Port
+AUTHCHECK: Port = internet client -> internet server, regular auth
+Auth Init Successfull: Port
+CADD: 4175 87.58.244.214:45088
+ +- bl_id = 46342
+ +- AUTO SUPER ADMIN (ID same as host)
+Posting to master server
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Port: a
+Port spawned.
+Starting arranged connection to 31.23.193.79:12435...
+   o possible[0] = 31.23.193.79:12435
+   o possible[1] = 192.168.1.3:61921
+   o possible[2] = 127.0.0.1:61921
+Sending punch packet to 31.23.193.79:12435
+Sending punch packet to 192.168.1.3:61921
+Sending punch packet to 127.0.0.1:61921
+Got Connect challenge Request from 31.23.193.79:12435
+Got connect request from 31.23.193.79:12435
+  net name = Jack Noir
+AUTHCHECK: Jack Noir = internet client -> internet server, regular auth
+Auth Init Successfull: Jack Noir
+CADD: 4193 31.23.193.79:12435
+ +- bl_id = 29019
+ +- no auto admin
+Posting to master server
+Jack Noir spawned.
+Got Connect challenge Request from 31.130.67.243:37701
+Got connect request from 31.130.67.243:37701
+  net name = Navar0nius
+AUTHCHECK: Navar0nius = internet client -> internet server, regular auth
+Auth Init Successfull: Navar0nius
+CADD: 4203 31.130.67.243:37701
+ +- bl_id = 19783
+ +- no auto admin
+Executing Add-Ons/GameMode_Space_Station/server.cs.
+Executing Add-Ons/GameMode_Space_Station/support/vizard.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/bricks.cs.
+Activating package: ActivateData
+ package ActivateData is already active
+Executing Add-Ons/GameMode_Space_Station/scripts/player.cs.
+Activating package: SpaceStation_Player
+ package SpaceStation_Player is already active
+Activating package: FlashlightPackage
+ package FlashlightPackage is already active
+Executing Add-Ons/GameMode_Space_Station/scripts/zipline.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/jetpack.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/chat.cs.
+Activating package: SpaceStation_Chat
+ package SpaceStation_Chat is already active
+Executing Add-Ons/GameMode_Space_Station/scripts/GridWorld.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/AirGroup.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/water.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/singularity.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/gravity_generator.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/asteroids.cs.
+Activating package: SpaceStationPackage
+ package SpaceStationPackage is already active
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Navar0nius: Zoop
+
+<input> (0): Unable to find object: '' attempting to call function 'detachFromObject'
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent
+
+Navar0nius spawned.
+<input> (0): Unknown command inspectupdateapply.
+  Object (4210) fxLight -> GameBase -> SceneObject -> NetObject -> SimObject
+<input> (0): Unknown command sendUpdate.
+  Object (4181) Player -> Player -> ShapeBase -> GameBase -> SceneObject -> NetObject -> SimObject
+Admin attempt by Navar0nius BL_ID:19783 IP:31.130.67.243
+--Success! - ADMIN
+Got Connect challenge Request from 81.101.185.154:6772
+Got connect request from 81.101.185.154:6772
+  net name = DerpyFanta
+AUTHCHECK: DerpyFanta = internet client -> internet server, regular auth
+Auth Init Successfull: DerpyFanta
+CADD: 4249 81.101.185.154:6772
+ +- bl_id = 111235
+ +- no auto admin
+Posting to master server
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Navar0nius: I see
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+DerpyFanta: Hi
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Navar0nius: ey
+DerpyFanta spawned.
+
+base/server/scripts/allGameScripts.cs (29229): Unable to find object: '-1' attempting to call function 'getClient'
+BackTrace: ->PlayerSpaceArmor::onTrigger->Armor::onTrigger->[snowBallPackage]Player::ActivateStuff->Player::ActivateStuff->[ActivateData]fxDTSBrick::onActivate->fxDTSBrick::onActivate->getMiniGameFromObject
+
+
+base/server/scripts/allGameScripts.cs (29229): Unable to find object: '-1' attempting to call function 'getClient'
+BackTrace: ->PlayerSpaceArmor::onTrigger->Armor::onTrigger->[snowBallPackage]Player::ActivateStuff->Player::ActivateStuff->[ActivateData]fxDTSBrick::onActivate->fxDTSBrick::onActivate->getMiniGameFromObject
+
+Client 4193 timed out.
+Issuing Disconnect packet.
+CDROP: 4193 31.23.193.79:12435
+Posting to master server
+Client 4249 disconnected.
+Issuing Disconnect packet.
+CDROP: 4249 81.101.185.154:6772
+AUTHCHECK: Port = internet client -> internet server, regular auth
+Auth Continue Successfull: Port
+AUTHCHECK: Navar0nius = internet client -> internet server, regular auth
+Auth Continue Successfull: Navar0nius
+Got Connect challenge Request from 87.68.48.165:50042
+Got connect request from 87.68.48.165:50042
+  net name = Blockhead148530
+AUTHCHECK: Blockhead148530 = internet client -> internet server, regular auth
+Auth Init Successfull: Blockhead148530
+CADD: 4278 87.68.48.165:50042
+ +- bl_id = 148529
+ +- no auto admin
+Posting to master server
+Blockhead148530 spawned.
+Got Connect challenge Request from 24.233.104.78:47073
+Got connect request from 24.233.104.78:47073
+  net name = Skill4Life
+AUTHCHECK: Skill4Life = internet client -> internet server, regular auth
+Auth Init Successfull: Skill4Life
+CADD: 4288 24.233.104.78:47073
+ +- bl_id = 4382
+ +- no auto admin
+Posting to master server
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Skill4Life: hi
+Skill4Life spawned.
+AUTHCHECK: Port = internet client -> internet server, regular auth
+Auth Continue Successfull: Port
+Client 4278 disconnected.
+Issuing Disconnect packet.
+CDROP: 4278 87.68.48.165:50042
+Posting to master server
+AUTHCHECK: Navar0nius = internet client -> internet server, regular auth
+Auth Continue Successfull: Navar0nius
+Got Connect challenge Request from 91.96.98.43:26095
+Got connect request from 91.96.98.43:26095
+  net name = Warground
+AUTHCHECK: Warground = internet client -> internet server, regular auth
+Auth Init Successfull: Warground
+CADD: 16103 91.96.98.43:26095
+ +- bl_id = 2988
+ +- no auto admin
+Posting to master server
+Got Connect challenge Request from 77.96.142.232:1024
+Got connect request from 77.96.142.232:1024
+  net name = Sir Cummingsworth
+AUTHCHECK: Sir Cummingsworth = internet client -> internet server, regular auth
+Auth Init Successfull: Sir Cummingsworth
+CADD: 16107 77.96.142.232:1024
+ +- bl_id = 33184
+ +- no auto admin
+Warground spawned.
+AUTHCHECK: Skill4Life = internet client -> internet server, regular auth
+Auth Continue Successfull: Skill4Life
+Sir Cummingsworth spawned.
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Warground: i cant type anymore
+Client 16107 disconnected.
+Issuing Disconnect packet.
+CDROP: 16107 77.96.142.232:1024
+Posting to master server
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Warground: <a:blockland.us/detail.php?ip=5.9.42.22&port=28000&blid=6556>blockland.us/detail.php?ip=5.9.42.22&port=28000&blid=6556</a>
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Warground: yea
+AUTHCHECK: Port = internet client -> internet server, regular auth
+Auth Continue Successfull: Port
+AUTHCHECK: Navar0nius = internet client -> internet server, regular auth
+Auth Continue Successfull: Navar0nius
+AUTHCHECK: Warground = internet client -> internet server, regular auth
+Auth Continue Successfull: Warground
+AUTHCHECK: Skill4Life = internet client -> internet server, regular auth
+Auth Continue Successfull: Skill4Life
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Warground: now add octodad too
+Client 4288 disconnected.
+Issuing Disconnect packet.
+CDROP: 4288 24.233.104.78:47073
+Posting to master server
+Executing Add-Ons/GameMode_Space_Station/server.cs.
+Executing Add-Ons/GameMode_Space_Station/support/vizard.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/bricks.cs.
+Activating package: ActivateData
+ package ActivateData is already active
+Executing Add-Ons/GameMode_Space_Station/scripts/player.cs.
+Activating package: SpaceStation_Player
+ package SpaceStation_Player is already active
+Executing Add-Ons/GameMode_Space_Station/scripts/zipline.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/jetpack.cs.
+Missing file: Add-Ons/GameMode_Space_Station/scripts/flashlight.cs!
+Executing Add-Ons/GameMode_Space_Station/scripts/chat.cs.
+Activating package: SpaceStation_Chat
+ package SpaceStation_Chat is already active
+Executing Add-Ons/GameMode_Space_Station/scripts/GridWorld.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/AirGroup.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/water.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/singularity.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/gravity_generator.cs.
+Executing Add-Ons/GameMode_Space_Station/scripts/asteroids.cs.
+Activating package: SpaceStationPackage
+ package SpaceStationPackage is already active
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Warground: last time i watched some movies with friends we played it
+
+getSubStr(...): error, starting position and desired length must be >= 0: ("",-1, 1)
+BackTrace: ->[SpaceStation_Chat]serverCmdMessageSent->serverCmdMessageSent->chatFilter
+
+Warground: 1 controlelr for each limb
+Got Connect challenge Request from 99.250.174.196:37652
+Got connect request from 99.250.174.196:37652
+  net name = BlockHero
+AUTHCHECK: BlockHero = internet client -> internet server, regular auth
+Auth Init Successfull: BlockHero
+CADD: 16233 99.250.174.196:37652
+ +- bl_id = 24825
+ +- no auto admin
+Posting to master server

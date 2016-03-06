@@ -304,7 +304,12 @@ function GravityGenerator::setStatus(%this, %status)
 function GravityGenerator::setAudio(%this, %profile)
 {
 	if (isObject(%this.audio))
+	{
+		if (%this.audio.profile.getID() == %profile.getID())
+			return;
+
 		%this.audio.delete();
+	}
 
 	if (!isObject(%profile))
 		return;
@@ -316,7 +321,7 @@ function GravityGenerator::setAudio(%this, %profile)
 		is3D = 1;
 		isLooping = 1;
 
-		maxDistance = 45;
+		maxDistance = 40;
 		referenceDistance = 20;
 
 		useProfileDescription = 0;

@@ -448,21 +448,6 @@ function FxDTSBrick::setTile(%this, %data, %x, %y)
 			%this.fullTile.setTrusted(1);
 			%this.fullTile.plant();
 
-			%group = %this.getGroup();
-			%brick = %this.fullTile;
-
-			if (!isObject(%group))
-			{
-				announce("Set Tile - group does not exist, brick: " @ %brick);
-				return 0;
-			}
-
-			if (DataBlockGroup.isMember(%brick))
-			{
-				announce("Set Tile - brick is datablock " @ %brick SPC %brick.getName() SPC %brick.getClassName());
-				return 0;
-			}
-
 			%this.getGroup().add(%this.fullTile);
 		}
 
@@ -510,8 +495,9 @@ function FxDTSBrick::setTile(%this, %data, %x, %y)
 			%this.tile[%x, %y].plant();
 
 			%this.getGroup().add(%this.tile[%x, %y]);
-			return %this.tile[%x, %y];
 		}
+
+		return %this.tile[%x, %y];
 	}
 
 	return 0;

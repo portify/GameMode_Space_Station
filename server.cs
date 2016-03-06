@@ -1,59 +1,43 @@
+// setLogMode(1);
+// trace(1);
+
 $SS::Path = "Add-Ons/GameMode_Space_Station/";
 
-exec("./support/vizard.cs");
-exec("./support/raycasts.cs");
+exec("./support/vizard.cs"); // shouldn't cause anything
+//exec("./support/raycasts.cs"); // doesn't cause bug
 
-exec("./scripts/items/storage.cs");
-exec("./scripts/items/tools.cs");
-exec("./scripts/items/paperwork.cs");
+//exec("./scripts/items/storage.cs"); // doesn't cause bug
+//exec("./scripts/items/tools.cs"); // doesn't cause bug
+//exec("./scripts/items/paperwork.cs"); // doesn't cause bug
 
 exec("./scripts/bricks.cs");
 exec("./scripts/player.cs");
-exec("./scripts/footsteps.cs");
-exec("./scripts/zipline.cs");
+exec("./scripts/footsteps.cs"); // doesn't cause bug
+exec("./scripts/zipline.cs"); // doesn't cause bug
+exec("./scripts/jetpack.cs"); // doesn't cause bug
+exec("./scripts/flashlight.cs"); // added long after bug appeared, shouldn't be causing it
+exec("./scripts/chat.cs"); // added long bug appeared, shouldn't be causing it
 
 exec("./scripts/GridWorld.cs");
-exec("./scripts/AirGroup.cs");
-exec("./scripts/water.cs");
-exec("./scripts/singularity.cs");
-exec("./scripts/gravity_generator.cs");
+exec("./scripts/AirGroup.cs"); // doesn't cause bug
+exec("./scripts/water.cs"); // doesn't cause bug
+exec("./scripts/singularity.cs"); // doesn't cause bug
+exec("./scripts/gravity_generator.cs"); // doesn't cause bug
+exec("./scripts/asteroids.cs"); // added long bug after appeared, shouldn't be causing it
 
-function initWorldSpawn()
-{
-	%base = GridWorld.set(0, 0, 500, BrickBaseData);
-
-	if (isObject(%base))
-		%base.setTile(Brick4x4fData);
-
-	GridWorld.baseSpawn = %base;
-}
-
-if (!isObject(GridWorld))
+function initGridWorld()
 {
 	new ScriptObject(GridWorld)
 	{
 		size = "4 4 10";
 	};
 
-	schedule(0, 0, "initWorldSpawn");
+	%base = GridWorld.set(0, 0, 500, BrickBaseData);
+	// %base.setTile(Brick4x4fData);
 }
 
-function serverCmdBase(%client)
-{
-	%player = %client.player;
-
-	if (isObject(%player) && isObject(GridWorld.baseSpawn))
-	{
-		%player.setTransform(vectorAdd(GridWorld.baseSpawn.getPosition(), "0 0 1.4"));
-		%player.setVelocity("0 0 0");
-	}
-}
-
-// if ($GameModeArg !$= "Add-Ons/GameMode_Space_Station/gamemode.txt")
-// {
-// 	error("ERROR: GameMode_Space_Station cannot be used in custom games");
-// 	return;
-// }
+if (!isObject(GridWorld))
+	schedule(0, 0, "initGridWorld");
 
 datablock StaticShapeData(FrameThinData)
 {
@@ -197,13 +181,19 @@ function mSign(%value)
 
 package SpaceStationPackage
 {
-	function MiniGameSO::pickSpawnPoint(%this)
+	function GameConnection::getSpawnPoint(%this)
 	{
-		if (%this.owner == 0 && isObject(GridWorld.baseSpawn))
-			return vectorAdd(GridWorld.baseSpawn.position, "0 0 1.4");
-
-		return ParenT::pickSpawnPoint(%this);
+		return "0 0 1002.4";
+		return Parent::getSpawnPoint(%this);
 	}
+
+	// function MiniGameSO::pickSpawnPoint(%this)
+	// {
+	// 	if (%this.owner == 0 && isObject($base))
+	// 		return vectorAdd($base.position, "0 0 1.4");
+	//
+	// 	return Parent::pickSpawnPoint(%this);
+	// }
 
 	function Observer::onTrigger(%this, %obj, %slot, %state)
 	{
@@ -221,7 +211,7 @@ package SpaceStationPackage
 				%end = vectorAdd(%start, vectorScale(%obj.getEyeVector(), 100));
 				%ray = containerRayCast(%start, %end, $TypeMasks::FxBrickAlwaysObjectType);
 
-				if (%ray.isGridBrick && (!isObject(GridWorld.baseSpawn) || %ray != GridWorld.baseSpawn))
+				if (%ray.isGridBrick && (%ray.gridX != 0 || %ray.gridY != 0 || %ray.gridZ != 500))
 				{
 					if (%ray.isTile && isObject(%ray.baseBrick))
 						//%ray.baseBrick.setTile(0, %ray.tileX, %ray.tileY);
@@ -278,11 +268,6 @@ package SpaceStationPackage
 			cancel(%old.updateBuildMode);
 			commandToClient(%this, 'ClearCenterPrint');
 		}
-	}
-
-	function serverCmdRotateBrick(%client, %delta)
-	{
-		%control = %client.getControlObject();
 	}
 
 	function serverCmdDropCameraAtPlayer(%client)
