@@ -5,4 +5,4 @@ This gamemode was scrapped. There is no point in downloading this as it does not
 
 [![forthebadge](http://forthebadge.com/images/badges/no-ragrets.svg)](http://forthebadge.com)
 
-*Made by qoh and Crystalwarrior*
+*Made by [ns](https://github.com/qoh) and [Crystalwarrior](https://github.com/Crystalwarrior)*
